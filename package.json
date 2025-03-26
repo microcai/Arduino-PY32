@@ -1,0 +1,11 @@
+{
+    "system": "all",
+    "version": "1.0.0",
+    "name": "framework-arduino-py32",
+    "maintainer": "HalfSweet",
+    "websiteURL": "https://arduino.py32.halfsweet.cn",
+    "email": "HalfSweet@HalfSweet.cn",
+    "help": {
+      "online": "https://arduino.py32.halfsweet.cn"
+    }
+}
