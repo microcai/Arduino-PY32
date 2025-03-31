@@ -19,6 +19,7 @@
 #include "Arduino.h"
 #include "PinConfigured.h"
 #include "py32yyxx_ll_adc.h"
+#include "py32f0xx_hal_adc.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -211,12 +212,12 @@ extern "C"
   {
 #ifdef __LL_ADC_CALC_VREFANALOG_VOLTAGE
 #ifdef AIR32U5xx
-    return (__LL_ADC_CALC_VREFANALOG_VOLTAGE(ADC1, analogRead(AVREF), LL_ADC_RESOLUTION));
+    return (__LL_ADC_CALC_VREFANALOG_VOLTAGE(ADC1, analogRead(ADC_CHANNEL_VREFINT), LL_ADC_RESOLUTION));
 #else
-    return (__LL_ADC_CALC_VREFANALOG_VOLTAGE(analogRead(AVREF), LL_ADC_RESOLUTION));
+    return (__LL_ADC_CALC_VREFANALOG_VOLTAGE(analogRead(ADC_CHANNEL_VREFINT), LL_ADC_RESOLUTION));
 #endif
 #else
-  return (VREFINT * ADC_RANGE / analogRead(AVREF)); // ADC sample to mV
+  return (VREFINT * ADC_RANGE / analogRead(ADC_CHANNEL_VREFINT)); // ADC sample to mV
 #endif
   }
 

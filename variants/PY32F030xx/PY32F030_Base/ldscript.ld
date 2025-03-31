@@ -18,7 +18,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = ORIGIN(RAM) + LENGTH(RAM);    /* end of RAM */
+_estack = ORIGIN(RAM) + LENGTH(RAM) - 4;    /* end of RAM */
 /*
   Generate a link error if heap and stack don't fit into RAM.
   These numbers affect the USED size of RAM

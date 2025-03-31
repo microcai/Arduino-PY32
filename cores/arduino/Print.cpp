@@ -271,6 +271,7 @@ extern "C" {
   }
 }
 
+#ifdef SUPPORT_PRINTF
 int Print::printf(const char *format, ...)
 {
   va_list ap;
@@ -298,7 +299,7 @@ int Print::vprintf(const __FlashStringHelper *format, va_list ap)
 {
   return vdprintf((int)this, (const char *)format, ap);
 }
-
+#endif
 
 // Private Methods /////////////////////////////////////////////////////////////
 

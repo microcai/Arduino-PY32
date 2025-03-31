@@ -111,7 +111,7 @@ void enableClock(sourceClock_t source)
 #if defined(AIRMP1xx)
         RCC_OscInitStruct.HSICalibrationValue = 0x00;
 #else
-        RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+        RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz;
 #endif
       }
       break;

@@ -872,12 +872,6 @@ uint16_t adc_read_value(PinName pin, uint32_t resolution)
     !defined(AIRF7xx) && !defined(ADC1_V2_5)
   AdcHandle.Init.LowPowerAutoWait      = DISABLE;                       /* Auto-delayed conversion feature disabled */
 #endif
-#if !defined(AIR32F1xx) && !defined(AIRF2xx) && !defined(AIRF3xx) && \
-    !defined(AIRF4xx) && !defined(AIRF7xx) && !defined(AIRG4xx) && \
-    !defined(AIRH7xx) && !defined(AIRL4xx) && !defined(AIRL5xx) && \
-    !defined(AIRMP1xx) && !defined(AIRWBxx) ||  defined(ADC_SUPPORT_2_5_MSPS)
-  AdcHandle.Init.LowPowerAutoPowerOff  = DISABLE;                       /* ADC automatically powers-off after a conversion and automatically wakes-up when a new conversion is triggered */
-#endif
 #ifdef ADC_CHANNELS_BANK_B
   AdcHandle.Init.ChannelsBank          = bank;
 #elif defined(ADC_CHANNELS_BANK_A)

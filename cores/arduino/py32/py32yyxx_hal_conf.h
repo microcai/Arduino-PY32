@@ -36,12 +36,6 @@
   #undef HAL_I2C_MODULE_ENABLED
 #endif
 
-#if !defined(HAL_I2S_MODULE_DISABLED)
-  #define HAL_I2S_MODULE_ENABLED
-#else
-  #undef HAL_I2S_MODULE_ENABLED
-#endif
-
 #if !defined(HAL_RTC_MODULE_DISABLED) && !defined (PY32F002Ax5)
   #define HAL_RTC_MODULE_ENABLED
 #else
@@ -58,12 +52,6 @@
   #define HAL_SPI_MODULE_ENABLED
 #else
   #undef HAL_SPI_MODULE_ENABLED
-#endif
-
-#if !defined(HAL_TIM_MODULE_DISABLED)
-  #define HAL_TIM_MODULE_ENABLED
-#else
-  #undef HAL_TIM_MODULE_ENABLED
 #endif
 
 #if !defined(HAL_ICACHE_MODULE_DISABLED)

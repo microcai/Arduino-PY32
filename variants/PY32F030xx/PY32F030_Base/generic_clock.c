@@ -10,9 +10,12 @@
  *
  *******************************************************************************
  */
+#define RCC_PLL_SUPPORT
+#include "py32f0xx_ll_rcc.h"
+#include "py32f0xx_hal_rcc.h"
+
 #if defined (PY32F030x3) || defined (PY32F030x4) || defined(PY32F030x6) || defined (PY32F030x7) || defined (PY32F030x8)
 #include "pins_arduino.h"
-
 /**
  * @brief  System Clock Configuration
  * @param  None
@@ -49,7 +52,7 @@ WEAK void SystemClock_Config(void)
     RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_4MHz; /* 配置HSI时钟4MHz */
     RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                        /* 关闭HSE */
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                    /* 关闭PLL */
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE;            /*不选择时钟源*/
+    RCC_OscInitStruct.PLL.PLLSource = LL_RCC_PLLSOURCE_NONE;            /*不选择时钟源*/
     /* 配置振荡器 */
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
     {
@@ -78,7 +81,7 @@ WEAK void SystemClock_Config(void)
     RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_8MHz; /* 配置HSI时钟8MHz */
     RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                        /* 关闭HSE */
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                    /* 关闭PLL */
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE;            /*不选择时钟源*/
+    RCC_OscInitStruct.PLL.PLLSource = 0;                             /*不选择时钟源*/
     /* 配置振荡器 */
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
     {
@@ -91,7 +94,7 @@ WEAK void SystemClock_Config(void)
     RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;                                             /* AHB时钟 1分频 */
     RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;                                              /* APB时钟 1分频 */
     /* 配置时钟源 */
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, 0) != HAL_OK)
     {
         Error_Handler();
     }
@@ -108,7 +111,7 @@ WEAK void SystemClock_Config(void)
     RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_16MHz; /* 配置HSI时钟16MHz */
     RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                         /* 关闭HSE */
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                     /* 关闭PLL */
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE;             /*不选择时钟源*/
+    RCC_OscInitStruct.PLL.PLLSource = LL_RCC_PLLSOURCE_NONE;             /*不选择时钟源*/
     /* 配置振荡器 */
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
     {
@@ -138,7 +141,7 @@ WEAK void SystemClock_Config(void)
     RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_22p12MHz; /* 配置HSI时钟22.12MHz */
     RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                            /* 关闭HSE */
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                        /* 关闭PLL */
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE;                /*不选择时钟源*/
+    RCC_OscInitStruct.PLL.PLLSource = LL_RCC_PLLSOURCE_NONE;                /*不选择时钟源*/
     /* 配置振荡器 */
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
     {
@@ -168,7 +171,7 @@ WEAK void SystemClock_Config(void)
     RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_24MHz; /* 配置HSI时钟24MHz */
     RCC_OscInitStruct.HSEState = RCC_HSE_OFF;                         /* 关闭HSE */
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;                     /* 关闭PLL */
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE;             /*不选择时钟源*/
+    RCC_OscInitStruct.PLL.PLLSource = LL_RCC_PLLSOURCE_NONE;             /*不选择时钟源*/
     /* 配置振荡器 */
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
     {
@@ -229,7 +232,7 @@ WEAK void SystemClock_Config(void)
     RCC_OscInitStruct.HSEState = RCC_HSE_ON;              /* 开启HSE */
     RCC_OscInitStruct.HSEFreq = RCC_HSE_8_16MHz;          /* HSE晶振工作频率16M~32M */
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;         /* 关闭PLL */
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE; /* 不选择PLL源 */
+    RCC_OscInitStruct.PLL.PLLSource = LL_RCC_PLLSOURCE_NONE; /* 不选择PLL源 */
     /* 配置振荡器 */
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
     {
@@ -260,7 +263,7 @@ WEAK void SystemClock_Config(void)
     RCC_OscInitStruct.HSEState = RCC_HSE_ON;              /* 开启HSE */
     RCC_OscInitStruct.HSEFreq = RCC_HSE_8_16MHz;          /* HSE晶振工作频率16M~32M */
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;         /* 关闭PLL */
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE; /* 不选择PLL源 */
+    RCC_OscInitStruct.PLL.PLLSource = LL_RCC_PLLSOURCE_NONE; /* 不选择PLL源 */
     /* 配置振荡器 */
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
     {
@@ -291,7 +294,7 @@ WEAK void SystemClock_Config(void)
     RCC_OscInitStruct.HSEState = RCC_HSE_ON;              /* 开启HSE */
     RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;         /* HSE晶振工作频率16M~32M */
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;         /* 关闭PLL */
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE; /* 不选择PLL源 */
+    RCC_OscInitStruct.PLL.PLLSource = LL_RCC_PLLSOURCE_NONE; /* 不选择PLL源 */
     /* 配置振荡器 */
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
     {
@@ -322,7 +325,7 @@ WEAK void SystemClock_Config(void)
     RCC_OscInitStruct.HSEState = RCC_HSE_ON;              /* 开启HSE */
     RCC_OscInitStruct.HSEFreq = RCC_HSE_16_32MHz;         /* HSE晶振工作频率16M~32M */
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_OFF;         /* 关闭PLL */
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_NONE; /* 不选择PLL源 */
+    RCC_OscInitStruct.PLL.PLLSource = LL_RCC_PLLSOURCE_NONE; /* 不选择PLL源 */
     /* 配置振荡器 */
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
     {

@@ -63,7 +63,7 @@
   * @{
   */
 
-#include "py32f030xx.h"
+#include "py32f0xx.h"
 
 #if !defined  (HSE_VALUE)
 #define HSE_VALUE    24000000U    /*!< Value of the External oscillator in Hz */
@@ -106,6 +106,8 @@ uint32_t SystemCoreClock = HSI_VALUE;
 const uint32_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
 const uint32_t APBPrescTable[8] =  {0, 0, 0, 0, 1, 2, 3, 4};
 const uint32_t HSIFreqTable[8] = {4000000U, 8000000U, 16000000U, 22120000U, 24000000U, 4000000U, 4000000U, 4000000U};
+
+#define READ_BIT(REG, BIT)    ((REG) & (BIT))
 
 /**
  * @brief  Clock functions.
@@ -169,14 +171,14 @@ void SystemCoreClockUpdate(void)             /* Get Core Clock Frequency      */
 void SystemInit(void)
 {
   /* Set the HSI clock to 8MHz by default */
-  RCC->ICSCR = (RCC->ICSCR & 0xFFFF0000) | (0x1 << 13) | *(uint32_t *)(0x1fff0f04);
+  // RCC->ICSCR = (RCC->ICSCR & 0xFFFF0000) | (0x1 << 13) | *(uint32_t *)(0x1fff0f04);
 
-  /* Configure the Vector Table location add offset address ------------------*/
-#ifdef VECT_TAB_SRAM
-  SCB->VTOR = SRAM_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal SRAM */
-#else
-  SCB->VTOR = FLASH_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH */
-#endif /* VECT_TAB_SRAM */
+//   /* Configure the Vector Table location add offset address ------------------*/
+// #ifdef VECT_TAB_SRAM
+//   SCB->VTOR = SRAM_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal SRAM */
+// #else
+//   SCB->VTOR = FLASH_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH */
+// #endif /* VECT_TAB_SRAM */
 }
 
 #ifndef FORBID_VECT_TAB_MIGRATION

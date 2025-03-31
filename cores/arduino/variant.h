@@ -12,4 +12,4 @@
  */
 #pragma once
 
-#include VARIANT_H
+#include "variant_generic.h"
