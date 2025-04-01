@@ -40,11 +40,6 @@ void pinMode(uint32_t ulPin, uint32_t ulMode)
         dac_stop(p);
       } else
 #endif //HAL_DAC_MODULE_ENABLED && !HAL_DAC_MODULE_ONLY
-#if defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY)
-        if (pin_in_pinmap(p, PinMap_TIM)) {
-          pwm_stop(p);
-        }
-#endif //HAL_TIM_MODULE_ENABLED && !HAL_TIM_MODULE_ONLY
       {
         reset_pin_configured(p, g_anOutputPinConfigured);
       }
