@@ -586,6 +586,8 @@ static uint32_t i2c_getTiming(i2c_t *obj, uint32_t frequency)
   } else if (frequency <= 1000000) {
     i2c_speed = 1000000;
   }
+  else i2c_speed = frequency;
+
 #ifdef I2C_TIMING
   if (i2c_speed != 0U) {
     switch (i2c_speed) {
@@ -765,7 +767,7 @@ void i2c_custom_init(i2c_t *obj, uint32_t timing, uint32_t addressingMode, uint3
         handle->Init.ClockSpeed      = i2c_getTiming(obj, timing);
         /* Standard mode (sm) is up to 100kHz, then it's Fast mode (fm)     */
         /* In fast mode duty cyble bit must be set in CCR register          */
-        if (timing > 100000) {
+        if (timing >= 100000) {
           handle->Init.DutyCycle       = I2C_DUTYCYCLE_16_9;
         } else {
           handle->Init.DutyCycle       = I2C_DUTYCYCLE_2;

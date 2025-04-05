@@ -87,9 +87,9 @@ void TwoWire::begin(uint8_t address, bool generalCall, bool NoStretchMode)
 
   recoverBus(); // in case I2C bus (device) is stuck after a reset for example
 #ifdef PY32F0xx
-  i2c_custom_init(&_i2c, 100000, 0x00, ownAddress);
+  i2c_custom_init(&_i2c, 1000000, 0x00, ownAddress);
 #else
-  i2c_custom_init(&_i2c, 100000, I2C_ADDRESSINGMODE_7BIT, ownAddress);
+  i2c_custom_init(&_i2c, 400000, I2C_ADDRESSINGMODE_7BIT, ownAddress);
 #endif
 
   if (_i2c.isMaster == 0) {
