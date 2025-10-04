@@ -12,6 +12,7 @@
  */
 #define RCC_PLL_SUPPORT
 #include "py32f0xx_ll_rcc.h"
+#include "py32f0xx_hal_flash.h"
 #include "py32f0xx_hal_rcc.h"
 
 #if defined (PY32F030x3) || defined (PY32F030x4) || defined(PY32F030x6) || defined (PY32F030x7) || defined (PY32F030x8)
