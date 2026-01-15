@@ -55,6 +55,8 @@
 #define PF6                     34
 #define PF7                     35
 #define PF4                     36
+#define PF3                     37
+#define PF2                     38
 
 // Alternate pins number
 #define PA6_ALT1                (PA6  | ALT1)
