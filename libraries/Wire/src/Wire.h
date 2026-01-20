@@ -1,153 +1,131 @@
+/******************************************************************************
+ * The MIT License
+ *
+ * Copyright (c) 2010 LeafLabs LLC.
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *****************************************************************************/
+
+/**
+ * @file Wire.h
+ * @author Trystan Jones <crenn6977@gmail.com>
+ * @brief Wire library, uses the WireBase to create the primary interface
+ *        while keeping low level interactions invisible to the user.
+ */
+
 /*
-  TwoWire.h - TWI/I2C library for Arduino & Wiring
-  Copyright (c) 2006 Nicholas Zambetti.  All right reserved.
+ * Library updated by crenn to follow new Wire system.
+ * Code was derived from the original Wire for maple code by leaflabs and the
+ * modifications by gke and ala42.
+ */
 
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
+#ifndef _WIRE_H_
+#define _WIRE_H_
 
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
+#include "WireBase.h"
 
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+/*
+ * On the Maple, let the default pins be in the same location as the Arduino
+ * pins
+ */
 
-  Modified 2012 by Todd Krein (todd@krein.org) to implement repeated starts
-*/
+class TwoWire : public WireBase
+{
+public:
+    /*
+     * Accept pin numbers for SCL and SDA lines. Set the delay needed
+     * to create the timing for I2C's Standard Mode and Fast Mode.
+     */
+    TwoWire(uint8_t scl, uint8_t sda, uint8_t delay);
 
-#ifndef TwoWire_h
-#define TwoWire_h
+    /*
+     * If object is destroyed, set pin numbers to 0.
+     */
+    virtual ~TwoWire();
 
-#include <functional>
+    /*
+     * Sets pins SDA and SCL to OUPTUT_OPEN_DRAIN, joining I2C bus as
+     * master. This function overwrites the default behaviour of
+     * .begin(uint8_t) in WireBase
+     */
+    bool begin(uint8_t self_addr = 0x00);
+public:
+    uint8_t       i2c_delay;
+    uint8_t       scl_pin;
+    uint8_t       sda_pin;
 
-#include "Stream.h"
-#include "Arduino.h"
-extern "C" {
-#include "utility/twi.h"
-}
+    /*
+     * Sets the SCL line to HIGH/LOW and allow for clock stretching by slave
+     * devices
+     */
+    void set_scl(bool state);
+    bool set_scl(bool state, uint32_t timeout);
 
-// Minimal buffer length. Buffers length will be increased when needed,
-// but TX buffer is limited to a maximum to avoid too much stack consumption
-// Note: Buffer length and max buffer length are limited by uin16_t type
-#define BUFFER_LENGTH 32
-#if !defined(WIRE_MAX_TX_BUFF_LENGTH)
-  #define WIRE_MAX_TX_BUFF_LENGTH       512U
-#endif
+    /*
+     * Sets the SDA line to HIGH/LOW
+     */
+    void set_sda(bool state);
 
-// WIRE_HAS_END means Wire has end()
-#define WIRE_HAS_END 1
+    /*
+     * Creates a Start condition on the bus
+     */
+    void i2c_start();
 
-class TwoWire : public Stream {
-  public:
-    typedef std::function<void(int)> cb_function_receive_t;
-    typedef std::function<void(void)> cb_function_request_t;
+    /*
+     * Creates a Stop condition on the bus
+     */
+    void  i2c_stop();
 
-  private:
-    uint8_t *rxBuffer;
-    uint16_t rxBufferAllocated;
-    uint16_t rxBufferIndex;
-    uint16_t rxBufferLength;
+    /*
+     * Gets an ACK condition from a slave device on the bus
+     */
+    bool i2c_get_ack();
 
-    uint8_t txAddress;
-    uint8_t *txBuffer;
-    uint16_t txBufferAllocated;
-    uint16_t txDataSize;
+    /*
+     * Creates a ACK condition on the bus
+     */
+    void i2c_send_ack();
 
-    uint8_t transmitting;
+    /*
+     * Creates a NACK condition on the bus
+     */
+    void i2c_send_nack();
 
-    uint8_t ownAddress;
-    i2c_t _i2c;
+    /*
+     * Shifts in the data through SDA and clocks SCL for the slave device
+     */
+    uint8_t i2c_shift_in();
 
-    std::function<void(int)> user_onReceive;
-    std::function<void(void)> user_onRequest;
+    /*
+     * Shifts out the data through SDA and clocks SCL for the slave device
+     */
+    void i2c_shift_out(uint8_t val);
+protected:
+    /*
+     * Processes the incoming I2C message defined by WireBase
+     */
 
-    static void onRequestService(i2c_t *);
-    static void onReceiveService(i2c_t *);
-
-    void allocateRxBuffer(size_t length);
-    size_t allocateTxBuffer(size_t length);
-
-    void resetRxBuffer(void);
-    void resetTxBuffer(void);
-    void recoverBus(void);
-
-  public:
-    TwoWire();
-    TwoWire(uint32_t sda, uint32_t scl);
-    // setSCL/SDA have to be called before begin()
-    void setSCL(uint32_t scl)
-    {
-      _i2c.scl = digitalPinToPinName(scl);
-    };
-    void setSDA(uint32_t sda)
-    {
-      _i2c.sda = digitalPinToPinName(sda);
-    };
-    void setSCL(PinName scl)
-    {
-      _i2c.scl = scl;
-    };
-    void setSDA(PinName sda)
-    {
-      _i2c.sda = sda;
-    };
-    void begin(bool generalCall = false);
-    void begin(uint32_t, uint32_t);
-    void begin(uint8_t, bool generalCall = false, bool NoStretchMode = false);
-    void begin(int, bool generalCall = false, bool NoStretchMode = false);
-    void end();
-    void setClock(uint32_t);
-    void beginTransmission(uint8_t);
-    void beginTransmission(int);
-    uint8_t endTransmission(void);
-    uint8_t endTransmission(uint8_t);
-    uint8_t requestFrom(uint8_t, uint8_t);
-    uint8_t requestFrom(uint8_t, uint8_t, uint8_t);
-    uint8_t requestFrom(uint8_t, size_t, bool);
-    uint8_t requestFrom(uint8_t, uint8_t, uint32_t, uint8_t, uint8_t);
-    uint8_t requestFrom(int, int);
-    uint8_t requestFrom(int, int, int);
-    virtual size_t write(uint8_t);
-    virtual size_t write(const uint8_t *, size_t);
-    virtual int available(void);
-    virtual int read(void);
-    virtual int peek(void);
-    virtual void flush(void);
-
-    void onReceive(cb_function_receive_t callback);
-    void onRequest(cb_function_request_t callback);
-
-    inline size_t write(unsigned long n)
-    {
-      return write((uint8_t)n);
-    }
-    inline size_t write(long n)
-    {
-      return write((uint8_t)n);
-    }
-    inline size_t write(unsigned int n)
-    {
-      return write((uint8_t)n);
-    }
-    inline size_t write(int n)
-    {
-      return write((uint8_t)n);
-    }
-    using Print::write;
-
-    // Could be used to mix Arduino API and STM32Cube HAL API (ex: DMA). Use at your own risk.
-    I2C_HandleTypeDef *getHandle(void)
-    {
-      return &(_i2c.handle);
-    }
+    virtual uint8_t process();
 };
-
-
 
 extern TwoWire Wire;
 
-#endif
+#endif // _WIRE_H_
