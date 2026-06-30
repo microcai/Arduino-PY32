@@ -23,28 +23,11 @@
 extern "C" {
 #endif
 
-
-extern uint32_t g_anOutputPinConfigured[MAX_NB_PORT];
-
 void pinMode(uint32_t ulPin, uint32_t ulMode)
 {
   PinName p = digitalPinToPinName(ulPin);
 
   if (p != NC) {
-    // If the pin that support PWM or DAC output, we need to turn it off
-#if (defined(HAL_DAC_MODULE_ENABLED) && !defined(HAL_DAC_MODULE_ONLY)) ||\
-    (defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY))
-    if (is_pin_configured(p, g_anOutputPinConfigured)) {
-#if defined(HAL_DAC_MODULE_ENABLED) && !defined(HAL_DAC_MODULE_ONLY)
-      if (pin_in_pinmap(p, PinMap_DAC)) {
-        dac_stop(p);
-      } else
-#endif //HAL_DAC_MODULE_ENABLED && !HAL_DAC_MODULE_ONLY
-      {
-        reset_pin_configured(p, g_anOutputPinConfigured);
-      }
-    }
-#endif
     switch (ulMode) {
       case INPUT: /* INPUT_FLOATING */
         pin_function(p, PY32_PIN_DATA(PY32_MODE_INPUT, GPIO_NOPULL, 0));

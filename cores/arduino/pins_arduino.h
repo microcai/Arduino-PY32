@@ -87,7 +87,6 @@ static const uint32_t SCL = PIN_WIRE_SCL;
 extern "C" {
 #endif
 extern const PinName digitalPin[];
-extern const uint32_t analogInputPin[];
 
 #define NOT_AN_INTERRUPT            (uint32_t)NC
 
@@ -95,32 +94,14 @@ extern const uint32_t analogInputPin[];
 #if NUM_ANALOG_INPUTS > 0
 /* Note: Analog pin is also a digital pin */
 #define digitalPinToPinName(p)      ((((uint32_t)(p) & PNUM_MASK) < NUM_DIGITAL_PINS) ? \
-            (PinName)(digitalPin[(uint32_t)(p) & PNUM_MASK] | ((p) & ALTX_MASK)) : \
-            (((uint32_t)(p) & PNUM_ANALOG_BASE) == PNUM_ANALOG_BASE) && \
-            (((uint32_t)(p) & PNUM_MASK) < NUM_ANALOG_INTERNAL_FIRST) ? \
-            (PinName)(digitalPin[analogInputPin[(p) & PNUM_ANALOG_INDEX]] | ((p) & ALTX_MASK)) : NC)
+            (PinName)(digitalPin[(uint32_t)(p) & PNUM_MASK] | ((p) & ALTX_MASK)) : NC )
+
 #else
 #define digitalPinToPinName(p)      ((((uint32_t)(p) & PNUM_MASK) < NUM_DIGITAL_PINS) ? \
             (PinName)(digitalPin[(uint32_t)(p) & PNUM_MASK] | ((p) & ALTX_MASK)) : NC)
 #endif /* NUM_ANALOG_INPUTS > 0 */
 /* Convert a PinName PX_n to a digital pin number */
 uint32_t pinNametoDigitalPin(PinName p);
-
-/* Convert an analog pin number to a digital pin number */
-#if NUM_ANALOG_INPUTS > 0
-/* Used by analogRead api to have A0 == 0 */
-/* Non contiguous analog pins definition in digitalPin array */
-#define analogInputToDigitalPin(p)  ((((uint32_t)(p) & PNUM_MASK) < NUM_ANALOG_INPUTS) ? \
-            analogInputPin[(uint32_t)(p) & PNUM_MASK] | ((uint32_t)(p) & ALTX_MASK) : \
-            (((uint32_t)(p) & PNUM_ANALOG_BASE) == PNUM_ANALOG_BASE) && \
-            (((uint32_t)(p) & PNUM_MASK) < NUM_ANALOG_INTERNAL_FIRST) ? \
-            analogInputPin[(p) & PNUM_ANALOG_INDEX] | ((uint32_t)(p) & ALTX_MASK) : (uint32_t)NC)
-#else/* No analog pin defined */
-#define analogInputToDigitalPin(p)  (NUM_DIGITAL_PINS)
-#endif /* NUM_ANALOG_INPUTS > 0 */
-
-/* Convert an analog pin number Ax to a PinName PX_n */
-PinName analogInputToPinName(uint32_t pin);
 
 /* All pins could manage EXTI */
 #define digitalPinToInterrupt(p)    (digitalPinIsValid(p) ? p : NOT_AN_INTERRUPT)
@@ -179,10 +160,6 @@ PinName analogInputToPinName(uint32_t pin);
                                      (digitalPinToPinName(p) == \
                                       digitalPinToPinName(PIN_SERIAL_TX & PNUM_MASK)))
 #endif
-/* Convenient macro to handle Analog for Firmata */
-#define pinIsAnalogInput digitalpinIsAnalogInput
-bool digitalpinIsAnalogInput(uint32_t pin);
-uint32_t digitalPinToAnalogInput(uint32_t pin);
 
 #ifdef __cplusplus
 }
